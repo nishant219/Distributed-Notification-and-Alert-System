@@ -2,6 +2,7 @@ import express from 'express';
 import {config} from './configs/env.config';
 import dbConnection from './configs/database.config';
 import logger from './utils/logger.util'
+import kafkaConfig from './configs/kafka.config';
 
 const app=express();
 
@@ -11,6 +12,8 @@ app.use(express.urlencoded({extended:true}));
 const startServer=async()=>{
     try{
         await dbConnection.connect();
+        await kafkaConfig.connectKafka();
+        
         const PORT=config.PORT || 3000;
 
         const server = app.listen(PORT,()=>{

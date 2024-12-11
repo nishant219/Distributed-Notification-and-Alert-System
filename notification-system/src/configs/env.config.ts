@@ -10,7 +10,8 @@ export const config={
     MONGO_URI: process.env.MONGO_URI || '',
 
     // Kafka Configuration
-    KAFKA_BOOTSTRAP_SERVERS: process.env.KAFKA_BOOTSTRAP_SERVERS || 'localhost:9092',
+    KAFKA_CLIENT_ID: process.env.KAFKA_CLIENT_ID || 'notification-service',
+    KAFKA_BOOTSTRAP_SERVERS: process.env.KAFKA_BOOTSTRAP_SERVERS || 'http://test',
 
     // Authentication
     JWT_SECRET: process.env.JWT_SECRET || 'default_secret_key',
