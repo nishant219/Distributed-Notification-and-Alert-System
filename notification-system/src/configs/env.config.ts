@@ -21,5 +21,7 @@ export const config={
     MAX_NOTIFICATIONS_PER_HOUR: parseInt(process.env.MAX_NOTIFICATIONS_PER_HOUR || '5'),
 
     // Logging
-    LOG_LEVEL: process.env.LOG_LEVEL || 'info'
+    LOG_LEVEL: process.env.LOG_LEVEL || 'info',
+
+    ELASTICSEARCH_URL: process.env.ELASTICSEARCH_URL || 'http://localhost:9200'
 }

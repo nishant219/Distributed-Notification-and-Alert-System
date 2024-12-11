@@ -3,6 +3,8 @@ import {config} from './configs/env.config';
 import dbConnection from './configs/database.config';
 import logger from './utils/logger.util'
 import kafkaConfig from './configs/kafka.config';
+import notificationRoutes from './routes/notification.routes';
+import userPreferencesRoutes from './routes/user-preferences.routes';
 
 const app=express();
 
@@ -15,6 +17,9 @@ const startServer=async()=>{
         await kafkaConfig.connectKafka();
         
         const PORT=config.PORT || 3000;
+
+        app.use('/api/v1/notifications',notificationRoutes);
+        app.use('/api/v1/user-preferences', userPreferencesRoutes);
 
         const server = app.listen(PORT,()=>{
             logger.info(`Server running on port ${PORT}`);
