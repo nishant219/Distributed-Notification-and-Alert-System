@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { NotificationType, NotificationPriority } from './models/notification.model';
 
 const BASE_URL = 'http://localhost:3000/api/v1';
 
@@ -7,7 +8,7 @@ async function testNotificationSystem() {
         // 1. Create User Preferences
         const userPreferences = await axios.post(`${BASE_URL}/user-preferences`, {
             userId: 'test_user_001',
-            channels: ['email', 'sms', 'push'],
+            channels: [NotificationType.EMAIL, NotificationType.SMS, NotificationType.PUSH],
             quietHoursStart: '22:00',
             quietHoursEnd: '08:00',
             notificationLimit: 5
@@ -19,20 +20,20 @@ async function testNotificationSystem() {
             {
                 userId: 'test_user_001',
                 message: 'Low Priority System Update',
-                types: ['email'],
-                priority: 'low'
+                types: [NotificationType.EMAIL],
+                priority: NotificationPriority.LOW
             },
             {
                 userId: 'test_user_001',
                 message: 'Urgent Security Alert',
-                types: ['push', 'sms'],
-                priority: 'urgent'
+                types: [NotificationType.PUSH, NotificationType.SMS],
+                priority: NotificationPriority.URGENT
             },
             {
                 userId: 'test_user_001',
                 message: 'Scheduled Weekly Report',
-                types: ['email'],
-                priority: 'medium',
+                types: [NotificationType.EMAIL],
+                priority: NotificationPriority.MEDIUM,
                 sendTime: new Date(Date.now() + 24 * 60 * 60 * 1000)
             }
         ];
@@ -43,45 +44,37 @@ async function testNotificationSystem() {
                 const result = await axios.post(`${BASE_URL}/notifications/notify`, notification);
                 sentNotifications.push(result.data);
                 console.log('Notification Sent:', result.data);
-            } catch (notificationError) {
-                if (axios.isAxiosError(notificationError)) {
-                    console.error('Failed to send notification:', notificationError.response ? notificationError.response.data : notificationError.message);
-                } else {
-                    console.error('Failed to send notification:', notificationError);
-                }
+            } catch (notificationError: any) {
+                console.error('Failed to send notification:', notificationError.response ? notificationError.response.data : notificationError.message);
             }
         }
 
-        // 3. Get Analytics
+        // 3. Get Overall Delivery Stats
         try {
-            const analytics = await axios.get(`${BASE_URL}/notifications/analytics`);
-            console.log('Analytics:', analytics.data);
-        } catch (analyticsError) {
-            if (axios.isAxiosError(analyticsError)) {
-                console.error('Failed to fetch analytics:', analyticsError.response ? analyticsError.response.data : analyticsError.message);
-            } else {
-                console.error('Failed to fetch analytics:', analyticsError);
-            }
+            const deliveryStats = await axios.get(`${BASE_URL}/analytics/delivery-stats`);
+            console.log('Delivery Analytics:', deliveryStats.data);
+        } catch (analyticsError: any) {
+            console.error('Failed to fetch delivery stats:', analyticsError.response ? analyticsError.response.data : analyticsError.message);
         }
 
-        // 4. Get User Preferences
+        // 4. Get User Engagement Metrics
         try {
-            const preferences = await axios.get(`${BASE_URL}/user-preferences?userId=test_user_001`);
+            const userEngagement = await axios.get(`${BASE_URL}/analytics/user-engagement/test_user_001`);
+            console.log('User Engagement Metrics:', userEngagement.data);
+        } catch (engagementError: any) {
+            console.error('Failed to fetch user engagement metrics:', engagementError.response ? engagementError.response.data : engagementError.message);
+        }
+
+        // 5. Get User Preferences
+        try {
+            const preferences = await axios.get(`${BASE_URL}/user-preferences/test_user_001`);
             console.log('User Preferences:', preferences.data);
-        } catch (preferencesError) {
-            if (axios.isAxiosError(preferencesError)) {
-                console.error('Failed to fetch user preferences:', preferencesError.response ? preferencesError.response.data : preferencesError.message);
-            } else {
-                console.error('Failed to fetch user preferences:', preferencesError);
-            }
+        } catch (preferencesError: any) {
+            console.error('Failed to fetch user preferences:', preferencesError.response ? preferencesError.response.data : preferencesError.message);
         }
 
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error('Test Failed:', error.response ? error.response.data : error.message);
-        } else {
-            console.error('Test Failed:', error);
-        }
+    } catch (error: any) {
+        console.error('Test Failed:', error.response ? error.response.data : error.message);
     }
 }
 
