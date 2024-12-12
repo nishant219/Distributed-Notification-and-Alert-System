@@ -1,36 +1,46 @@
 version: '3.8'
+
 services:
   # Notification Service
   notification-service:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: notification-service
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
       - MONGODB_URI=mongodb://mongodb:27017/notification_db
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       - mongodb
       - kafka
-      - elasticsearch
     networks:
       - notification-network
 
   # MongoDB Service
   mongodb:
     image: mongo:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
+      - mongodb-data:/data/db
     networks:
       - notification-network
 
   # Kafka Service
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - notification-network
+
   kafka:
     image: wurstmeister/kafka
+    container_name: kafka
     ports:
       - "9092:9092"
     environment:
@@ -41,29 +51,9 @@ services:
     networks:
       - notification-network
 
-  # Zookeeper Service (required for Kafka)
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-    networks:
-      - notification-network
-
-  # Elasticsearch Service
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-    environment:
-      - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    networks:
-      - notification-network
-
-# Volume for MongoDB data persistence  
+# Persistent volume for MongoDB
 volumes:
-  mongodb_data:
+  mongodb-data:
 
 # Network configuration
 networks:
