@@ -1,5 +1,6 @@
 import express from 'express';
 import {config} from './configs/env.config';
+import cors from 'cors';
 import dbConnection from './configs/database.config';
 import logger from './utils/logger.util'
 import kafkaConfig from './configs/kafka.config';
@@ -10,6 +11,7 @@ import NotificationScheduler from './schedulers/notification.scheduler';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 

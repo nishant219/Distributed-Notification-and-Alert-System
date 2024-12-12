@@ -21,6 +21,7 @@
     "@vercel/node": "^3.2.29",
     "axios": "^1.7.9",
     "bull": "^4.16.4",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "elasticsearch": "^16.7.3",
     "express": "^4.21.2",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.4",
+    "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.97",
