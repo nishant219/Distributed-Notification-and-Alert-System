@@ -3,19 +3,9 @@ import { UserPreference } from '../models/notification.model';
 import logger from '../utils/logger.util';
 
 class UserPreferencesController {
-    static createUserPreferences = async (
-        req: Request, 
-        res: Response, 
-        next: NextFunction
-    ): Promise<void> => {
+    static createUserPreferences = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { 
-                userId, 
-                channels, 
-                quietHoursStart, 
-                quietHoursEnd, 
-                notificationLimit 
-            } = req.body;
+            const { userId, channels, quietHoursStart, quietHoursEnd, notificationLimit } = req?.body;
 
             const existingPreferences = await UserPreference.findOne({ userId });
 
@@ -46,26 +36,18 @@ class UserPreferencesController {
         }
     }
 
-    static getUserPreferences = async (
-        req: Request, 
-        res: Response, 
-        next: NextFunction
-    ): Promise<void> => {
+    static getUserPreferences = async ( req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { userId } = req.query;
-
+            const { userId } = req?.params;
             if (!userId) {
                 res.status(400).json({ error: 'User ID is required' });
                 return;
             }
-
             const preferences = await UserPreference.findOne({ userId });
-
             if (!preferences) {
                 res.status(404).json({ error: 'User preferences not found' });
                 return;
             }
-
             res.json(preferences);
         } catch (error: any) {
             logger.error('User preferences retrieval failed', error);

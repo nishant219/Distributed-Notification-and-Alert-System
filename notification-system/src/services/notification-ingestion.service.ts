@@ -12,7 +12,6 @@ class NotificationIngestionService {
     payload?: Record<string, any>
   ) {
     try {
-      // Validate notification request
       const notification = new Notification({
         userId,
         message,
@@ -24,10 +23,8 @@ class NotificationIngestionService {
         payload
       });
 
-      // Save to MongoDB
       await notification.save();
 
-      // Publish to Kafka
       await kafkaConfig.producer.send({
         topic: 'notifications',
         messages: [{

@@ -24,15 +24,24 @@ class AnalyticsService {
     try {
       const userNotifications = await Notification.find({ userId });
       
-      const averageDeliveryTime = userNotifications.reduce((acc, notification) => {
-        // Calculate delivery time if needed
-        return acc;
-      }, 0);
+      if (!userNotifications) {
+        return {
+          totalNotifications: 0,
+          sentNotifications: 0
+        };
+      }
+      
+      const totalNotifications = userNotifications.length;
+      const sentNotifications = userNotifications.filter(n => n.status === 'sent').length;
+      const failedNotifications = userNotifications.filter(n => n.status === 'failed').length;
+      const pendingNotifications = userNotifications.filter(n => n.status === 'pending').length;
 
       return {
-        totalNotifications: userNotifications.length,
-        sentNotifications: userNotifications.filter(n => n.status === 'sent').length,
-        averageDeliveryTime
+        totalNotifications,
+        sentNotifications,
+        failedNotifications,
+        pendingNotifications,
+        successRate: (sentNotifications / totalNotifications) * 100 || 0
       };
     } catch (error: any) {
       logger.error('User engagement metrics failed', error);

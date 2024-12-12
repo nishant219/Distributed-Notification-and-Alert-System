@@ -4,6 +4,6 @@ import UserPreferencesController from '../controllers/user-preferences.controlle
 const router = express.Router();
 
 router.post('/', UserPreferencesController.createUserPreferences);
-router.get('/', UserPreferencesController.getUserPreferences);
+router.get('/:userId', UserPreferencesController.getUserPreferences);
 
 export default router;

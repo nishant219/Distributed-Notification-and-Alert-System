@@ -1,10 +1,3 @@
-/**
- * Check if a given time is within quiet hours
- * @param checkTime Time to check
- * @param quietHoursStart Start of quiet hours (HH:MM format)
- * @param quietHoursEnd End of quiet hours (HH:MM format)
- * @returns Boolean indicating if time is within quiet hours
- */
 export function isWithinQuietHours(
     checkTime: Date, 
     quietHoursStart: string, 
